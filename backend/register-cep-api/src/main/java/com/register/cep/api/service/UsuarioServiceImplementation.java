@@ -26,6 +26,8 @@ public class UsuarioServiceImplementation implements UsuarioServiceInterface{
 		user.setCep(dto.cep());
 		user.setCpf(dto.cpf());
 		user.setNome(dto.nome());
+		user.setDataCriacao(user.getDataCriacao().now());
+		user.setDataAtualizacao(user.getDataAtualizacao().now());
 		
 		return usuarioRepository.save(user);
 	}

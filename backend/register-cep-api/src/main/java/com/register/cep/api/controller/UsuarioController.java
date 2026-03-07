@@ -38,7 +38,8 @@ public class UsuarioController {
 		return ResponseEntity.ok(new UsuarioResponseDTO(
 				usuario.getId(), 
 				usuario.getNome(), 
-				usuario.getCpf(), usuario.getCep(), 
+				usuario.getCpf(), 
+				usuario.getCep(), 
 				usuario.getDataCriacao(), 
 				usuario.getDataAtualizacao()
 			)
