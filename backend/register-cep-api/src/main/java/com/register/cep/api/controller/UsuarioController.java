@@ -16,8 +16,12 @@ import com.register.cep.api.dto.UsuarioResponseDTO;
 import com.register.cep.api.repository.UsuarioRepository;
 import com.register.cep.api.service.UsuarioServiceInterface;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/usuario")
+@Tag(name = "Usuario", description = "Atividades relacionadas ao cadastro de Usuário.")
 public class UsuarioController {
 
 	@Autowired
@@ -28,6 +32,10 @@ public class UsuarioController {
 	
 	
 	@PostMapping("/criarUsuario")
+	@Operation(
+			summary = "Cadastrar usuário",
+			description = "Cadastra um usuário a partir do nome e cpf. O endereço é gerado automaticamente a partir do cep informado.."
+			)
 	public ResponseEntity<?>criarUsuario(@RequestBody UsuarioRequestDTO dto){
 		Optional<Usuario>user = usuarioRepository.findByCpf(dto.cpf());
 		if(user.isPresent()) {
