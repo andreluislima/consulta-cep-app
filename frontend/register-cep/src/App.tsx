@@ -15,7 +15,7 @@ function App() {
         </div>
 
         {/* Table */}
-        <div className="content-table">
+        {/* <div className=""> */}
           <table className="table table-striped">
             <thead className="thead">
               <tr>
@@ -28,7 +28,7 @@ function App() {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="tbody">
               <tr>
                 <th scope="row">1</th>
                 <td>André Lima</td>
@@ -79,7 +79,7 @@ function App() {
             </tbody>
           </table>
         </div>
-      </div>
+      {/* </div> */}
     </>
   );
 }

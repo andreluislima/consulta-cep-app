@@ -18,11 +18,14 @@
   width: 100%;
   min-height: 100vh;
   padding: 0;
+  
+  background-image: linear-gradient(rgba(255, 255, 255, 0.822), rgba(255, 255, 255, 0.712)), url('./assets/img-ruas.webp');
+  background-size: cover;
 }
-
+ 
 /* HEADER */
 .container-header {
-  border: 2px solid blue;
+  /* border: 2px solid blue; */
   width: 100%;
   /* height: 15vh; */
   display: flex;
@@ -54,16 +57,26 @@ h1{
 
 /* TABLE */
 .content-table{
-  border: 2px solid red;
+  /* border: 2px solid red; */
+  /* background-color: transparent;
   width: 100%;
   overflow-x: auto;
   padding: 12px;
+  box-shadow: -3px 2px 9px 0px #665B5B; */
 }
 
+.table{
+  background-color: transparent;
+  width: 100%;
+  overflow-x: auto;
+  padding: 12px;
+  box-shadow: -3px 2px 9px 0px #665B5B;
+}
 .thead th{
   background-color: #779ccccb;
   color: #665B5B;
 }
+
 
 .thead th:first-child{
   border-top-left-radius: 10px;
@@ -77,6 +90,10 @@ h1{
   border-top-left-radius: 10px;
 }
 
+.tbody th,
+.tbody td{
+  border-bottom: 1px dotted #7c7878;
+}
 /* telas menores */
 @media (max-width: 768px) {
   .content-title {
