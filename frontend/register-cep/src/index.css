@@ -35,6 +35,13 @@
   width: 20%;
 }
 
+/* TABLE */
+.content-table{
+  border: 2px solid red;
+  width: 100%;
+  display: flex;
+}
+
 /* telas menores */
 @media (max-width: 768px) {
   .content-title {
