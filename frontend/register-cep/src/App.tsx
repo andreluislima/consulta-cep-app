@@ -4,7 +4,7 @@ import NavBar from "./assets/components/navbar";
 function App() {
   return (
     <>
-      <div className="container-fluid">
+      <div className="container-fluid container-app">
         {/* Header */}
         <div className="container-header">
           <NavBar/>
