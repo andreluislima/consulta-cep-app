@@ -6,10 +6,10 @@ function App() {
       <div className="container-fluid">
         {/* Header */}
         <div className="container-header">
-          <div className="content-title">
+          <div className="content-title mb-4">
             <h1>CEP Register - Sistema de Consulta e Gerenciamento de Endereços</h1>
           </div>
-          <div className="content-btn">
+          <div className="content-btn mb-4">
             <button className="btn btn-primary">Novo Registro</button>
           </div>
         </div>
@@ -17,14 +17,14 @@ function App() {
         {/* Table */}
         <div className="content-table">
           <table className="table table-striped">
-            <thead>
+            <thead className="thead">
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Nome</th>
                 <th scope="col">CPF</th>
                 <th scope="col">CEP</th>
                 <th scope="col">Endereço</th>
-                <th scope="col">Ações</th>
+                <th className="actions" scope="col">Ações</th>
               </tr>
             </thead>
 
