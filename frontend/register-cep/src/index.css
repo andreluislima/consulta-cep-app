@@ -16,10 +16,10 @@
 .container-fluid {
   border: 2px solid;
   width: 100%;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   padding: 0;
   
-  background-image: linear-gradient(rgba(255, 255, 255, 0.822), rgba(255, 255, 255, 0.712)), url('./assets/img-ruas.webp');
+  background-image: linear-gradient(rgba(255, 255, 255, 0.822), rgba(255, 255, 255, 0.822)), url('./assets/img-ruas.webp');
   background-size: cover;
 }
  

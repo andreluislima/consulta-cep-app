@@ -1,4 +1,5 @@
 import "./App.css";
+import NavBar from "./assets/components/navbar";
 
 function App() {
   return (
@@ -6,6 +7,7 @@ function App() {
       <div className="container-fluid">
         {/* Header */}
         <div className="container-header">
+          <NavBar/>
           <div className="content-title mb-4">
             <h1>CEP Register - Sistema de Consulta e Gerenciamento de Endereços</h1>
           </div>
