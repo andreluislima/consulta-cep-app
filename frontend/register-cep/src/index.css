@@ -9,4 +9,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.container-fluid{
+  border: 2px solid;
+  width: 100%;
+  height: 100vh;
+}
+.container-header{
+  border: 2px solid blue;
+}
  

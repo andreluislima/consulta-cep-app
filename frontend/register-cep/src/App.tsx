@@ -4,7 +4,11 @@ function App() {
 
   return (
     <>
-       <h1>Teste</h1>
+       <div className="container-fluid">
+        <div className="container-header">
+
+        </div>
+       </div>
     </>
   )
 }
