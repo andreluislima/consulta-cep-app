@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function NavBar() {
   return (
     <>
-      <nav className="navbar navbar-expand-lg w-100 p-3">
+      <nav className="navbar navbar-expand-lg w-100 p-4">
           <div className="navbar-brand">
             <Link to={"/"} className="link-logo">
               CEP Register

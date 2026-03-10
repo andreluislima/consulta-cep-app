@@ -1,7 +1,7 @@
 /* HEADER */
 .container-header {
   width: 100%;
-  height: 20vh;
+  /* height: 20vh; */
   display: flex;
   flex-wrap: wrap;
   background-image: linear-gradient(rgba(112, 150, 219, 0.699), rgb(255, 255, 255)), url('../../../assets/cidade-2.webp');
