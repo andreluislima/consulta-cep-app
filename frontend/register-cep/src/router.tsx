@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import Home from "./assets/pages/Home/Home";
-import NovoRegistro from "./assets/pages/NovoRegistro/NovoRegistro";
+import Home from "./pages/Home/Home";
+import NovoRegistro from "./pages/NovoRegistro/NovoRegistro";
 
 export default function MainRoutes(){
     return(
