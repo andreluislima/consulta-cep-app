@@ -1,0 +1,31 @@
+/* HEADER */
+.container-header {
+  /* border: 2px solid blue; */
+  width: 100%;
+  /* height: 15vh; */
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.content-title {
+  /* border: 2px solid red; */
+  width: 80%;
+  border-end-end-radius:10px;
+  background-color:#3389faab;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+
+h1{
+  font-size: 2.1rem;
+  color: #fff;
+}
+
+.content-btn {
+  /* border: 2px solid green; */
+  width: 20%;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+}

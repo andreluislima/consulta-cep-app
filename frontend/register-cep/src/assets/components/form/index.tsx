@@ -6,7 +6,7 @@ export default function Form() {
       <form className="needs-validation">
         <div className="row g-3 mb-3">
           <div className="col-sm-6">
-            <label for="firstName" className="form-label">
+            <label htmlFor="firstName" className="form-label">
               First name
             </label>
             <input
@@ -22,7 +22,7 @@ export default function Form() {
             </div>
           </div>
           <div className="col-sm-6">
-            <label for="lastName" className="form-label">
+            <label htmlFor="lastName" className="form-label">
               Last name
             </label>
             <input
@@ -39,7 +39,7 @@ export default function Form() {
 
         <div className="row g-3 mb-3">
           <div className="col-sm-6">
-            <label for="firstName" className="form-label">
+            <label htmlFor="firstName" className="form-label">
               First name
             </label>
             <input
@@ -55,7 +55,7 @@ export default function Form() {
             </div>
           </div>
           <div className="col-sm-6">
-            <label for="lastName" className="form-label">
+            <label htmlFor="lastName" className="form-label">
               Last name
             </label>
             <input

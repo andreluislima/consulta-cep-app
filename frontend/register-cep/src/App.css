@@ -1,0 +1,34 @@
+.container-app{
+  min-height: 100vh;
+}
+.container-fluid {
+  /* border: 2px solid; */
+  width: 100%;
+  padding: 0;
+  
+  background-image: linear-gradient(rgba(255, 255, 255, 0.822), rgba(255, 255, 255, 0.822)), url('./assets/img-ruas.webp');
+  background-size: cover;
+}
+ 
+
+/* TABLE */
+.content-table{
+  /* border: 2px solid red; */
+  /* background-color: transparent;
+  width: 100%;
+  overflow-x: auto;
+  padding: 12px;
+  box-shadow: -3px 2px 9px 0px #665B5B; */
+}
+
+
+/* telas menores */
+@media (max-width: 768px) {
+  .content-title {
+    width: 100%;
+  }
+
+  .content-btn {
+    width: 100%;
+  }
+}
