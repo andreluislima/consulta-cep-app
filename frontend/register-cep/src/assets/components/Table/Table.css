@@ -1,3 +1,6 @@
+.content-table{
+  overflow-x: auto;
+}
 .table{
   background-color: transparent;
   width: 100%;

@@ -1,9 +1,10 @@
-import './Table.css';
+import "./Table.css";
 
-export default function Table(){
-    return(
-        <>
-            <table className="table table-striped">
+export default function Table() {
+  return (
+    <>
+      <div className="content-table">
+        <table className="table table-striped">
           <thead className="thead">
             <tr>
               <th scope="col">#</th>
@@ -67,6 +68,7 @@ export default function Table(){
             </tr>
           </tbody>
         </table>
-        </>
-    )
+      </div>
+    </>
+  );
 }
