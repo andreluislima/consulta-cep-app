@@ -8,3 +8,9 @@ export type UsuarioResponse = {
     cidade:string;
     estado:string;
 }
+
+export type UsuarioRequest = {
+    cpp: string;
+    nome: string;
+    cpf: string;
+}
