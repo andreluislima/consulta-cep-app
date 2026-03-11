@@ -1,4 +1,4 @@
-const API_LOCAL_URL = "http://localhost:8080/usuario/";
+const API_LOCAL_URL = "http://localhost:8080/usuario";
 
 export const api = {
     async get<T>(endpoint: string):Promise<T>{
