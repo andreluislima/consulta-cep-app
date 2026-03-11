@@ -1,5 +1,5 @@
 import Table from "../../components/Table/Table";
-import { useGetUsers } from "../../integrations/Mutation";
+import { useGetUsers } from "../../hooks/integrations/useUsersQuery";
 import "./Home.css";
 
 export default function Home() {

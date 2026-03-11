@@ -1,5 +1,5 @@
 
-import Form from "../../components/Form/form";
+import Form from "../../components/Form/Form";
 import "./NovoRegistro.css";
 
 export default function NovoRegistro() {
