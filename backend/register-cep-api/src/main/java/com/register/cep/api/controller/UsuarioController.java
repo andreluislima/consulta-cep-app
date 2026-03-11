@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.register.cep.api.domain.Usuario;
+import com.register.cep.api.dto.ApiCepResponseDTO;
 import com.register.cep.api.dto.UsuarioRequestDTO;
 import com.register.cep.api.dto.UsuarioResponseDTO;
 import com.register.cep.api.dto.UsuarioResponseEditadoDTO;
 import com.register.cep.api.dto.UsuarioResponseRemovidoDTO;
 import com.register.cep.api.repository.UsuarioRepository;
+import com.register.cep.api.service.ApiCepServiceInterface;
 import com.register.cep.api.service.UsuarioServiceInterface;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +36,17 @@ public class UsuarioController {
 	UsuarioServiceInterface usuarioServiceInterface;
 	
 	@Autowired
+	ApiCepServiceInterface apiServiceInterface;
+	
+	@Autowired
 	UsuarioRepository usuarioRepository;
 	
+	@GetMapping("/buscarCep/{cep}")
+	public ResponseEntity<?>buscarCep(@PathVariable String cep){
+		ApiCepResponseDTO endereco = apiServiceInterface.buscarEnderecoPorCep(cep);
+		return ResponseEntity.ok(endereco);
+		
+	}
 	
 	@PostMapping("/criarUsuario")
 	@Operation(

@@ -14,3 +14,10 @@ export type UsuarioRequest = {
     nome: string;
     cpf: string;
 }
+
+export type CepResponse = {
+    logradouro:string;
+    bairro:string;
+    cidade:string;
+    estado:string;
+}
