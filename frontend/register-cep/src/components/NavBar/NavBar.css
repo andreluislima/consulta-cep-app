@@ -1,0 +1,26 @@
+.navbar {
+    background-color: #fff;
+    box-shadow: 3px -1px 8px rgb(0 0 0 / 91%);
+
+}
+
+.navbar-brand {
+    max-width: 100%;
+    font-weight: bold;
+
+}
+
+.link-logo {
+    text-decoration: none;
+}
+
+#navbarNavAltMarkup {
+    /* border: 2px solid red; */
+    display: flex;
+    justify-content: flex-end;
+}
+
+.link {
+    text-decoration: none;
+    font-weight: 600;
+}
