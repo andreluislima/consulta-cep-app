@@ -1,0 +1,60 @@
+.container-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.card-form {
+  width: 100%;
+  max-width: 900px;
+  border: 1px solid #dcdcdc;
+  box-shadow: 2px 4px 10px 4px #aba7a7;
+  background-color: #fff;
+}
+
+.form-grid {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  width: 100%;
+}
+
+.row-cep {
+  display: grid;
+  grid-template-columns: 300px 140px;
+  gap: 10px;
+  align-items: end;
+}
+
+.row-dados-pessoais {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.row-logradouro {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.row-dados-api {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .row-cep,
+  .row-dados-pessoais,
+  .row-dados-api {
+    grid-template-columns: 1fr;
+  }
+}

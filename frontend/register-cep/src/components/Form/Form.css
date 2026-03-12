@@ -21,6 +21,16 @@
 
 }
 
+.campos {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+}
+
+.campos > div {
+    flex: 1;
+}
+
 .content-form {
     /* border: 2px solid; */
     box-shadow: 2px 4px 10px 4px #aba7a7;
@@ -30,3 +40,6 @@
 .divider {
     border: 1px dotted rgba(97, 97, 97, 0.808);
 }
+
+
+
