@@ -44,6 +44,7 @@ export default function TableShad({ usuarios }: TableProps) {
             <TableRow>
               <TableHead>Id</TableHead>
               <TableHead>Nome</TableHead>
+              <TableHead>CEP</TableHead>
               <TableHead>CPF</TableHead>
               <TableHead>Endereço</TableHead>
               <TableHead>Ações</TableHead>
@@ -62,13 +63,11 @@ export default function TableShad({ usuarios }: TableProps) {
                   {usuario.estado}
                 </TableCell>
                 <TableCell className="">
-                    <button
-                        onClick={()=> handleEdit(usuario)}
-                    >Editar</button>
+                  <button onClick={() => handleEdit(usuario)}>Editar</button>
 
-                    <button
-                        onClick={() => handleDelete(usuario.id)}
-                    >Excluir</button>
+                  <button onClick={() => handleDelete(usuario.id)}>
+                    Excluir
+                  </button>
                 </TableCell>
               </TableRow>
             ))}

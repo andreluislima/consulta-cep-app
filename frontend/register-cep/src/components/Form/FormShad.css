@@ -7,15 +7,24 @@
 
 .card-form {
   width: 100%;
-  max-width: 900px;
+  max-width: 1100px;
   border: 1px solid #3d67da !important;
   box-shadow: 2px 4px 10px 4px #aba7a7;
   background-color: #fff;
 }
+.card-title{
+  border-bottom: 2px solid #aba7a780;
+  width: 100%;
+}
+
+h3{
+  font-size: 1.2rem;
+}
 .form-grid {
   display: grid;
   gap: 20px;
-  width: 100%;
+  width: 40vw;
+  /* width: 100%; */
 }
 
 .footer-actions {
@@ -56,4 +65,8 @@
   .row-dados-api {
     grid-template-columns: 1fr;
   }
+}
+
+@media (min-width: 320px) {
+
 }

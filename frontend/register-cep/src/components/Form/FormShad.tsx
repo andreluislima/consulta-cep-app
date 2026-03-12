@@ -1,7 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -17,8 +17,16 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 
 import "./FormShad.css";
+import type { UsuarioRequest, UsuarioResponse } from "@/types/Usuario.Type";
+import { useBuscarCep } from "@/hooks/integrations/useBuscarCep";
+import { useCriarUsuario } from "@/hooks/integrations/useCreateUserMutation";
+import { useEditarUsuario } from "@/hooks/integrations/useUpdateUseMutation";
 
-const formSchema = z.object({
+type EstadoDaRota = {
+  usuario?: UsuarioResponse;
+};
+
+const esquemaFormulario = z.object({
   nome: z
     .string()
     .min(3, "O nome deve ter pelo menos 3 caracteres.")
@@ -49,222 +57,348 @@ const formSchema = z.object({
     .max(30, "O estado deve ter no máximo 30 caracteres."),
 });
 
-type FormData = z.infer<typeof formSchema>;
+type DadosFormulario = z.infer<typeof esquemaFormulario>;
+
+type ErrosFormulario = Partial<Record<keyof DadosFormulario, string>>;
 
 export function FormShad() {
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      nome: "",
-      cpf: "",
-      cep: "",
-      logradouro: "",
-      bairro: "",
-      cidade: "",
-      estado: "",
-    },
-  });
+  const [cep, setCep] = useState("");
+  const [nome, setNome] = useState("");
+  const [cpf, setCpf] = useState("");
 
-  function onSubmit(data: FormData) {
-    toast("Formulário enviado com sucesso", {
-      description: (
-        <pre className="mt-2 w-[320px] overflow-x-auto rounded-md bg-black p-4 text-white">
-          <code>{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+  const [logradouro, setLogradouro] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
+
+  const [erros, setErros] = useState<ErrosFormulario>({});
+
+  const buscarCep = useBuscarCep();
+  const criarUsuario = useCriarUsuario();
+  const editarUsuario = useEditarUsuario();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { usuario } = (location.state as EstadoDaRota) || {};
+  const estaEmModoEdicao = !!usuario;
+
+  useEffect(() => {
+    if (usuario) {
+      setCep(usuario.cep || "");
+      setNome(usuario.nome || "");
+      setCpf(usuario.cpf || "");
+      setLogradouro(usuario.logradouro || "");
+      setBairro(usuario.bairro || "");
+      setCidade(usuario.cidade || "");
+      setEstado(usuario.estado || "");
+      setErros({});
+    }
+  }, [usuario]);
+
+  const limparErroDoCampo = (campo: keyof DadosFormulario) => {
+    setErros((estadoAnterior) => ({
+      ...estadoAnterior,
+      [campo]: undefined,
+    }));
+  };
+
+  const limparFormulario = () => {
+    setCep("");
+    setNome("");
+    setCpf("");
+    setLogradouro("");
+    setBairro("");
+    setCidade("");
+    setEstado("");
+    setErros({});
+  };
+
+  const validarFormulario = () => {
+    const dadosFormulario: DadosFormulario = {
+      nome,
+      cpf,
+      cep,
+      logradouro,
+      bairro,
+      cidade,
+      estado,
+    };
+
+    const resultado = esquemaFormulario.safeParse(dadosFormulario);
+
+    if (resultado.success) {
+      setErros({});
+      return true;
+    }
+
+    const novosErros: ErrosFormulario = {};
+
+    for (const issue of resultado.error.issues) {
+      const campo = issue.path[0] as keyof DadosFormulario;
+
+      if (!novosErros[campo]) {
+        novosErros[campo] = issue.message;
+      }
+    }
+
+    setErros(novosErros);
+
+    toast("Verifique os campos do formulário.", {
       position: "bottom-right",
     });
-  }
 
-  function handleBuscarCep() {
-    const cep = form.getValues("cep");
+    return false;
+  };
 
-    toast("Busca de CEP", {
-      description: `Buscar CEP: ${cep}`,
-      position: "bottom-right",
+  const handleBuscarCep = async () => {
+    try {
+      const resposta = await buscarCep.mutateAsync(cep);
+
+      setLogradouro(resposta.logradouro || "");
+      setBairro(resposta.bairro || "");
+      setCidade(resposta.localidade || "");
+      setEstado(resposta.estado || "");
+
+      setErros((estadoAnterior) => ({
+        ...estadoAnterior,
+        cep: undefined,
+        logradouro: undefined,
+        bairro: undefined,
+        cidade: undefined,
+        estado: undefined,
+      }));
+
+      toast("CEP localizado com sucesso.", {
+        position: "bottom-right",
+      });
+    } catch (error) {
+      console.log(`Erro ao buscar o CEP: ${error}`);
+
+      setLogradouro("");
+      setBairro("");
+      setCidade("");
+      setEstado("");
+
+      toast("Não foi possível localizar o CEP informado.", {
+        position: "bottom-right",
+      });
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!validarFormulario()) return;
+
+    const dadosUsuario: UsuarioRequest = {
+      nome,
+      cpf,
+      cep,
+    };
+
+    if (estaEmModoEdicao && usuario) {
+      editarUsuario.mutate(
+        {
+          id: usuario.id,
+          data: dadosUsuario,
+        },
+        {
+          onSuccess: () => {
+            toast("Usuário atualizado com sucesso!", {
+              position: "bottom-right",
+            });
+            limparFormulario();
+            navigate("/");
+          },
+        }
+      );
+      return;
+    }
+
+    criarUsuario.mutate(dadosUsuario, {
+      onSuccess: () => {
+        toast("Usuário criado com sucesso!", {
+          position: "bottom-right",
+        });
+        limparFormulario();
+        navigate("/");
+      },
     });
+  };
 
-    // Aqui depois você pode integrar com sua API / hook
-    // e usar form.setValue("logradouro", "...");
-    // form.setValue("bairro", "...");
-    // form.setValue("cidade", "...");
-    // form.setValue("estado", "...");
+  const handleCancelar = () => {
+    limparFormulario();
+  };
+
+  let textoBotaoSalvar = "";
+
+  if (estaEmModoEdicao) {
+    textoBotaoSalvar = editarUsuario.isPending
+      ? "Atualizando..."
+      : "Atualizar";
+  } else {
+    textoBotaoSalvar = criarUsuario.isPending
+      ? "Salvando..."
+      : "Salvar";
   }
 
   return (
     <div className="container-form">
       <Card className="card-form">
-        <CardHeader>
-          <CardTitle>Cadastro de Usuário</CardTitle>
+        <CardHeader className="card-title p-3">
+          <CardTitle>
+            <h3>
+              {estaEmModoEdicao ? "Editar Usuário" : "Cadastro de Usuário"}
+            </h3>
+          </CardTitle>
         </CardHeader>
 
         <CardContent>
           <form
-            id="form-rhf-demo"
-            onSubmit={form.handleSubmit(onSubmit)}
+            id="formulario-usuario"
+            onSubmit={handleSubmit}
             className="form-grid"
           >
             <FieldGroup className="row-cep">
-              <Controller
-                name="cep"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="cep">CEP</FieldLabel>
-                    <Input
-                      {...field}
-                      id="cep"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="00000-000"
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+              <Field data-invalid={!!erros.cep}>
+                <FieldLabel htmlFor="cep">CEP</FieldLabel>
+                <Input
+                  id="cep"
+                  value={cep}
+                  onChange={(e) => {
+                    setCep(e.target.value);
+                    limparErroDoCampo("cep");
+                  }}
+                  placeholder="00000-000"
+                  autoComplete="off"
+                  aria-invalid={!!erros.cep}
+                />
+                {erros.cep && <FieldError errors={[{ message: erros.cep }]} />}
+              </Field>
 
-              <Button type="button" onClick={handleBuscarCep}>
-                Buscar
+              <Button
+                type="button"
+                onClick={handleBuscarCep}
+                disabled={buscarCep.isPending || !cep.trim()}
+              >
+                {buscarCep.isPending ? "Buscando..." : "Buscar"}
               </Button>
             </FieldGroup>
 
             <FieldGroup className="row-dados-pessoais">
-              <Controller
-                name="nome"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="nome">Nome</FieldLabel>
-                    <Input
-                      {...field}
-                      id="nome"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Seu nome"
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
+              <Field data-invalid={!!erros.nome}>
+                <FieldLabel htmlFor="nome">Nome</FieldLabel>
+                <Input
+                  id="nome"
+                  value={nome}
+                  onChange={(e) => {
+                    setNome(e.target.value);
+                    limparErroDoCampo("nome");
+                  }}
+                  placeholder="Seu nome"
+                  autoComplete="off"
+                  aria-invalid={!!erros.nome}
+                />
+                {erros.nome && (
+                  <FieldError errors={[{ message: erros.nome }]} />
                 )}
-              />
+              </Field>
 
-              <Controller
-                name="cpf"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="cpf">CPF</FieldLabel>
-                    <Input
-                      {...field}
-                      id="cpf"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="000.000.000-00"
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+              <Field data-invalid={!!erros.cpf}>
+                <FieldLabel htmlFor="cpf">CPF</FieldLabel>
+                <Input
+                  id="cpf"
+                  value={cpf}
+                  onChange={(e) => {
+                    setCpf(e.target.value);
+                    limparErroDoCampo("cpf");
+                  }}
+                  placeholder="000.000.000-00"
+                  autoComplete="off"
+                  aria-invalid={!!erros.cpf}
+                />
+                {erros.cpf && <FieldError errors={[{ message: erros.cpf }]} />}
+              </Field>
             </FieldGroup>
 
             <FieldGroup className="row-logradouro">
-              <Controller
-                name="logradouro"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="logradouro">Logradouro</FieldLabel>
-                    <Input
-                      {...field}
-                      id="logradouro"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Rua, Avenida, Travessa..."
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
+              <Field data-invalid={!!erros.logradouro}>
+                <FieldLabel htmlFor="logradouro">Logradouro</FieldLabel>
+                <Input
+                  id="logradouro"
+                  value={logradouro}
+                  placeholder="Rua, Avenida, Travessa..."
+                  autoComplete="off"
+                  readOnly
+                  aria-invalid={!!erros.logradouro}
+                />
+                {erros.logradouro && (
+                  <FieldError errors={[{ message: erros.logradouro }]} />
                 )}
-              />
+              </Field>
             </FieldGroup>
 
             <FieldGroup className="row-dados-api">
-              <Controller
-                name="bairro"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="bairro">Bairro</FieldLabel>
-                    <Input
-                      {...field}
-                      id="bairro"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Bairro"
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
+              <Field data-invalid={!!erros.bairro}>
+                <FieldLabel htmlFor="bairro">Bairro</FieldLabel>
+                <Input
+                  id="bairro"
+                  value={bairro}
+                  placeholder="Bairro"
+                  autoComplete="off"
+                  readOnly
+                  aria-invalid={!!erros.bairro}
+                />
+                {erros.bairro && (
+                  <FieldError errors={[{ message: erros.bairro }]} />
                 )}
-              />
+              </Field>
 
-              <Controller
-                name="cidade"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="cidade">Cidade</FieldLabel>
-                    <Input
-                      {...field}
-                      id="cidade"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Cidade"
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
+              <Field data-invalid={!!erros.cidade}>
+                <FieldLabel htmlFor="cidade">Cidade</FieldLabel>
+                <Input
+                  id="cidade"
+                  value={cidade}
+                  placeholder="Cidade"
+                  autoComplete="off"
+                  readOnly
+                  aria-invalid={!!erros.cidade}
+                />
+                {erros.cidade && (
+                  <FieldError errors={[{ message: erros.cidade }]} />
                 )}
-              />
+              </Field>
 
-              <Controller
-                name="estado"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="estado">Estado</FieldLabel>
-                    <Input
-                      {...field}
-                      id="estado"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Estado"
-                      autoComplete="off"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
+              <Field data-invalid={!!erros.estado}>
+                <FieldLabel htmlFor="estado">Estado</FieldLabel>
+                <Input
+                  id="estado"
+                  value={estado}
+                  placeholder="Estado"
+                  autoComplete="off"
+                  readOnly
+                  aria-invalid={!!erros.estado}
+                />
+                {erros.estado && (
+                  <FieldError errors={[{ message: erros.estado }]} />
                 )}
-              />
+              </Field>
             </FieldGroup>
           </form>
         </CardContent>
 
         <CardFooter className="footer-actions">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Limpar
+          <Button type="button" variant="outline" onClick={handleCancelar}>
+            Cancelar
           </Button>
 
-          <Button type="submit" form="form-rhf-demo">
-            Salvar
+          <Button
+            type="submit"
+            form="formulario-usuario"
+            disabled={criarUsuario.isPending || editarUsuario.isPending}
+          >
+            {textoBotaoSalvar}
           </Button>
         </CardFooter>
       </Card>

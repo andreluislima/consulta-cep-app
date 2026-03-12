@@ -1,4 +1,4 @@
-import TableShad from "@/components/Table/TableShad";
+import TableShad from "../../components/Table/TableShad";
 import { useGetUsers } from "../../hooks/integrations/useUsersQuery";
 import "./Home.css";
 
