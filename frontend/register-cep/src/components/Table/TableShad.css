@@ -27,6 +27,10 @@
     justify-content: center;
 }
 
+.table-row:hover td {
+  background-color: #dbdde0 !important;
+}
+
 .table-button {
     display: flex;
     justify-content: space-around;

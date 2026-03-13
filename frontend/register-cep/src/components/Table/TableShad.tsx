@@ -51,9 +51,9 @@ export default function TableShad({ usuarios }: TableProps) {
             </TableRow>
           </TableHeader>
 
-          <TableBody>
+          <TableBody className="">
             {usuarios.map((usuario, index) => (
-              <TableRow key={usuario.id}>
+              <TableRow key={usuario.id} className="table-row">
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>{usuario.nome}</TableCell>
                 <TableCell>{usuario.cep}</TableCell>
