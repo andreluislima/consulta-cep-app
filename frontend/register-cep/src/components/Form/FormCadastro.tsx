@@ -16,7 +16,7 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 
-import "./FormShad.css";
+import "./FormCadastro.css";
 import type { UsuarioRequest, UsuarioResponse } from "@/types/Usuario.Type";
 import { useBuscarCep } from "@/hooks/integrations/useBuscarCep";
 import { useCriarUsuario } from "@/hooks/integrations/useCreateUserMutation";
@@ -61,7 +61,7 @@ type DadosFormulario = z.infer<typeof esquemaFormulario>;
 
 type ErrosFormulario = Partial<Record<keyof DadosFormulario, string>>;
 
-export function FormShad() {
+export function FormCadastro() {
   const [cep, setCep] = useState("");
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");

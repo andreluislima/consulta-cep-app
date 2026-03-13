@@ -1,12 +1,12 @@
 
-import { FormShad } from "@/components/Form/FormShad";
+import {FormCadastro} from "../../components/Form/FormCadastro";
 import "./NovoRegistro.css";
 
 export default function NovoRegistro() {
   return (
     <>
       <div className="container-novo-registro">
-        <FormShad/>
+        <FormCadastro/>
       </div>
     </>
   );

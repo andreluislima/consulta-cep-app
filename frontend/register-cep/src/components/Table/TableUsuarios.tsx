@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import "./TableShad.css";
+import "./TableUsuarios.css";
 import type { UsuarioResponse } from "@/types/Usuario.Type";
 import { useNavigate } from "react-router-dom";
 import { useDeleteUser } from "@/hooks/integrations/useDeleteUserMutation";
@@ -17,7 +17,7 @@ type TableProps = {
   usuarios: UsuarioResponse[];
 };
 
-export default function TableShad({ usuarios }: TableProps) {
+export default function TableUsuarios({ usuarios }: TableProps) {
   const navigate = useNavigate();
   const deleteUser = useDeleteUser();
 
