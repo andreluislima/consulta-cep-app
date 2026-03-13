@@ -21,6 +21,7 @@ import type { UsuarioRequest, UsuarioResponse } from "@/types/Usuario.Type";
 import { useBuscarCep } from "@/hooks/integrations/useBuscarCep";
 import { useCriarUsuario } from "@/hooks/integrations/useCreateUserMutation";
 import { useEditarUsuario } from "@/hooks/integrations/useUpdateUseMutation";
+import { formatarCep, formatarCpf } from "@/utils/mascaras/Mascaras";
 
 type EstadoDaRota = {
   usuario?: UsuarioResponse;
@@ -239,38 +240,6 @@ export function FormCadastro() {
     textoBotaoSalvar = criarUsuario.isPending ? "Salvando..." : "Salvar";
   }
 
-  // Máscaras
-  // Máscara - CEP
-  function formatarCep(valor: string) {
-    const numeros = valor.replace(/\D/g, "").slice(0, 8);
-    if (numeros.length <= 5) return numeros;
-
-    return numeros.slice(0, 5) + "-" + numeros.slice(5);
-  }
-
-  function formatarCPF(valor: string) {
-    const numeros = valor.replace(/\D/g, "").slice(0, 11);
-
-    if (numeros.length <= 3) return numeros;
-
-    if (numeros.length <= 6)
-      return numeros.slice(0, 3) + "." + numeros.slice(3);
-
-    if (numeros.length <= 9)
-      return (
-        numeros.slice(0, 3) + "." + numeros.slice(3, 6) + "." + numeros.slice(6)
-      );
-
-    return (
-      numeros.slice(0, 3) +
-      "." +
-      numeros.slice(3, 6) +
-      "." +
-      numeros.slice(6, 9) +
-      "-" +
-      numeros.slice(9)
-    );
-  }
 
   return (
     <div className="container-form">
@@ -340,7 +309,7 @@ export function FormCadastro() {
                   id="cpf"
                   value={cpf}
                   onChange={(e) => {
-                    setCpf(formatarCPF(e.target.value));
+                    setCpf(formatarCpf(e.target.value));
                     limparErroDoCampo("cpf");
                   }}
                   placeholder="000.000.000-00"
