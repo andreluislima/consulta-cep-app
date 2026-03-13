@@ -7,7 +7,6 @@
 
 .footer__container {
   max-width: 1200px;
-  margin: 0 auto;
   padding: 18px 24px;
   display: flex;
   justify-content: space-between;

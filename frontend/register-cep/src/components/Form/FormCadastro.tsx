@@ -16,11 +16,12 @@ import {
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
 
-import "./FormShad.css";
+import "./FormCadastro.css";
 import type { UsuarioRequest, UsuarioResponse } from "@/types/Usuario.Type";
 import { useBuscarCep } from "@/hooks/integrations/useBuscarCep";
 import { useCriarUsuario } from "@/hooks/integrations/useCreateUserMutation";
 import { useEditarUsuario } from "@/hooks/integrations/useUpdateUseMutation";
+import { formatarCep, formatarCpf } from "@/utils/mascaras/Mascaras";
 
 type EstadoDaRota = {
   usuario?: UsuarioResponse;
@@ -61,7 +62,7 @@ type DadosFormulario = z.infer<typeof esquemaFormulario>;
 
 type ErrosFormulario = Partial<Record<keyof DadosFormulario, string>>;
 
-export function FormShad() {
+export function FormCadastro() {
   const [cep, setCep] = useState("");
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
@@ -144,47 +145,59 @@ export function FormShad() {
 
     setErros(novosErros);
 
-    toast("Verifique os campos do formulário.", {
-      position: "bottom-right",
+    toast.info("Verifique os campos do formulário.", {
+      position: "top-right",
     });
 
     return false;
   };
 
-  const handleBuscarCep = async () => {
-    try {
-      const resposta = await buscarCep.mutateAsync(cep);
+ const handleBuscarCep = async () => {
+  try {
+    const resposta = await buscarCep.mutateAsync(cep);
 
-      setLogradouro(resposta.logradouro || "");
-      setBairro(resposta.bairro || "");
-      setCidade(resposta.localidade || "");
-      setEstado(resposta.estado || "");
-
-      setErros((estadoAnterior) => ({
-        ...estadoAnterior,
-        cep: undefined,
-        logradouro: undefined,
-        bairro: undefined,
-        cidade: undefined,
-        estado: undefined,
-      }));
-
-      toast("CEP localizado com sucesso.", {
-        position: "bottom-right",
-      });
-    } catch (error) {
-      console.log(`Erro ao buscar o CEP: ${error}`);
-
+    if (!resposta || !resposta.logradouro || !resposta.bairro || !resposta.localidade || !resposta.estado) {
       setLogradouro("");
       setBairro("");
       setCidade("");
       setEstado("");
 
-      toast("Não foi possível localizar o CEP informado.", {
-        position: "bottom-right",
+      toast.error("CEP não encontrado.", {
+        position: "top-right",
       });
+      return;
     }
-  };
+
+    setLogradouro(resposta.logradouro);
+    setBairro(resposta.bairro);
+    setCidade(resposta.localidade);
+    setEstado(resposta.estado);
+
+    setErros((estadoAnterior) => ({
+      ...estadoAnterior,
+      cep: undefined,
+      logradouro: undefined,
+      bairro: undefined,
+      cidade: undefined,
+      estado: undefined,
+    }));
+
+    toast.success("CEP localizado com sucesso.", {
+      position: "top-right",
+    });
+  } catch (error) {
+    console.error("Erro ao buscar o CEP:", error);
+
+    setLogradouro("");
+    setBairro("");
+    setCidade("");
+    setEstado("");
+
+    toast.error("Não foi possível localizar o CEP informado.", {
+      position: "top-right",
+    });
+  }
+};
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -205,25 +218,37 @@ export function FormShad() {
         },
         {
           onSuccess: () => {
-            toast("Usuário atualizado com sucesso!", {
-              position: "bottom-right",
+            toast.success("Usuário atualizado com sucesso!", {
+              position: "top-right",
             });
             limparFormulario();
             navigate("/");
           },
-        }
+          onError:(error) => {
+            console.log("Erro ao atualizar o usuário:", error);
+            toast.error("Não foi possível atualizar o usuário.",
+              {position:"top-right"}
+            )
+          }
+        },
       );
       return;
     }
 
     criarUsuario.mutate(dadosUsuario, {
       onSuccess: () => {
-        toast("Usuário criado com sucesso!", {
-          position: "bottom-right",
+        toast.success("Usuário criado com sucesso!", {
+          position: "top-right",
         });
         limparFormulario();
         navigate("/");
       },
+      onError:(error) =>{
+        console.log("Erro ao cadastrar usuário: ", error);
+        toast.error("Não foi possível cadastrar o usuário.", {
+          position: "top-right"
+        })
+      }
     });
   };
 
@@ -234,14 +259,11 @@ export function FormShad() {
   let textoBotaoSalvar = "";
 
   if (estaEmModoEdicao) {
-    textoBotaoSalvar = editarUsuario.isPending
-      ? "Atualizando..."
-      : "Atualizar";
+    textoBotaoSalvar = editarUsuario.isPending ? "Atualizando..." : "Atualizar";
   } else {
-    textoBotaoSalvar = criarUsuario.isPending
-      ? "Salvando..."
-      : "Salvar";
+    textoBotaoSalvar = criarUsuario.isPending ? "Salvando..." : "Salvar";
   }
+
 
   return (
     <div className="container-form">
@@ -254,7 +276,7 @@ export function FormShad() {
           </CardTitle>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="card-content">
           <form
             id="formulario-usuario"
             onSubmit={handleSubmit}
@@ -267,7 +289,7 @@ export function FormShad() {
                   id="cep"
                   value={cep}
                   onChange={(e) => {
-                    setCep(e.target.value);
+                    setCep(formatarCep(e.target.value))
                     limparErroDoCampo("cep");
                   }}
                   placeholder="00000-000"
@@ -311,7 +333,7 @@ export function FormShad() {
                   id="cpf"
                   value={cpf}
                   onChange={(e) => {
-                    setCpf(e.target.value);
+                    setCpf(formatarCpf(e.target.value));
                     limparErroDoCampo("cpf");
                   }}
                   placeholder="000.000.000-00"
@@ -388,12 +410,17 @@ export function FormShad() {
           </form>
         </CardContent>
 
-        <CardFooter className="footer-actions">
-          <Button type="button" variant="outline" onClick={handleCancelar}>
+        <CardFooter className="footer-actions mt-4">
+          <Button
+            className="btn btn-cancelar"
+            type="button"
+            onClick={handleCancelar}
+          >
             Cancelar
           </Button>
 
           <Button
+            className="btn btn-submit"
             type="submit"
             form="formulario-usuario"
             disabled={criarUsuario.isPending || editarUsuario.isPending}
