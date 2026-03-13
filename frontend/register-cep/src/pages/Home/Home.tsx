@@ -1,4 +1,4 @@
-import Table from "../../components/Table/Table";
+import TableShad from "../../components/Table/TableShad";
 import { useGetUsers } from "../../hooks/integrations/useUsersQuery";
 import "./Home.css";
 
@@ -14,7 +14,8 @@ export default function Home() {
   return (
     <>
       <div className="container-home">
-        <Table usuarios = {usuarios ?? []} />
+        {/* <Table usuarios = {usuarios ?? []} /> */}
+        <TableShad usuarios = {usuarios ?? []}/>
       </div>
     </>
   );

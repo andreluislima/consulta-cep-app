@@ -19,3 +19,19 @@ export const useCreateUser = () => {
     },
   });
 };
+
+export const useCriarUsuario = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: UsuarioRequest) => {
+      const response = await api.post<UsuarioResponse>("/criarUsuario", data);
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: GLOBAL_KEYS.GetUsers(),
+      });
+    },
+  });
+};

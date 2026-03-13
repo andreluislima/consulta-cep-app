@@ -3,40 +3,42 @@ import { Link } from "react-router-dom";
 
 export default function NavBar() {
   return (
-    <>
-      <nav className="navbar navbar-expand-lg w-100 p-4">
-          <div className="navbar-brand">
-            <Link to={"/"} className="link-logo">
-              CEP Register
-            </Link>
-          </div>
-          
+    <nav className="navbar navbar-expand-lg w-100 p-4">
+      <div className="container-fluid">
+        <div className="navbar-brand">
+          <Link to="/" className="link-logo">
+            CEP Register
+          </Link>
+        </div>
 
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
-          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div className="navbar-nav">
-              <Link to={"/"} className="link mx-5">
+        <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div className="navbar-nav-custom">
+            <div>
+              <Link to="/" className="nav-link-custom">
                 Home
               </Link>
+            </div>
 
-               <Link to={"/novo-registro"} className="link">
+            <div>
+              <Link to="/novo-registro" className="nav-link-custom">
                 Novo Registro
               </Link>
-
             </div>
           </div>
-      </nav>
-    </>
+        </div>
+      </div>
+    </nav>
   );
 }

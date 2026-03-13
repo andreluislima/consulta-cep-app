@@ -18,3 +18,19 @@ export const useUpdateUser = () => {
         }
     })
 }
+
+export const useEditarUsuario = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({id, data}: {id:number; data:UsuarioRequest}) => {
+            return api.put(`/editar/${id}`, data);
+        },
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: GLOBAL_KEYS.GetUsers(),
+            });
+        }
+    })
+}

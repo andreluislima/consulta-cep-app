@@ -26,6 +26,7 @@ import com.register.cep.api.service.UsuarioServiceInterface;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/usuario")
@@ -42,6 +43,10 @@ public class UsuarioController {
 	UsuarioRepository usuarioRepository;
 	
 	@GetMapping("/buscarCep/{cep}")
+	@Operation(
+			summary = "Buscar CEP ",
+			description = "Busca o CEP e retorna os dados de endereço utilizando a  API externa  Via CEP"
+			)
 	public ResponseEntity<?>buscarCep(@PathVariable String cep){
 		ApiCepResponseDTO endereco = apiServiceInterface.buscarEnderecoPorCep(cep);
 		return ResponseEntity.ok(endereco);
@@ -51,9 +56,9 @@ public class UsuarioController {
 	@PostMapping("/criarUsuario")
 	@Operation(
 			summary = "Cadastrar usuário",
-			description = "Cadastra um usuário a partir do nome e cpf. O endereço é gerado automaticamente a partir do cep informado.."
+			description = "Cadastra um usuário a partir do nome e cpf. O endereço é gerado automaticamente a partir do cep informado."
 			)
-	public ResponseEntity<?>criarUsuario(@RequestBody UsuarioRequestDTO dto){
+	public ResponseEntity<?>criarUsuario(@RequestBody @Valid UsuarioRequestDTO dto){
 		Optional<Usuario>user = usuarioRepository.findByCpf(dto.cpf());
 		if(user.isPresent()) {
 			return ResponseEntity.badRequest().body("Usuário já cadastrado");
@@ -80,12 +85,20 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/usuarios")
+	@Operation(
+			summary = "Exibir usuários ",
+			description = "Retorna a lista de  todos os usuários cadastrados. "
+			)
 	public ResponseEntity<List<Usuario>>listarUsuarios(){
 		List<Usuario>usuarios = usuarioServiceInterface.listarUsuarios();
 		return ResponseEntity.ok(usuarios);
 	}
 	
 	@PutMapping("/editar/{id}")
+	@Operation(
+			summary = "Atualiza usuário ",
+			description = "Atualiza os dados de um usuário especifico com base no ID informado."
+			)
 	public ResponseEntity<UsuarioResponseEditadoDTO>editarUsuario(@PathVariable Long id,  @RequestBody UsuarioRequestDTO dto){
 		Usuario usuario = usuarioServiceInterface.editarUsuario(id, dto);
 		return ResponseEntity.ok(new UsuarioResponseEditadoDTO(
@@ -103,6 +116,10 @@ public class UsuarioController {
 	}
 	
 	@DeleteMapping("/remover/{id}")
+	@Operation(
+			summary = "Remover Usuário ",
+			description = "Remove um usuário a partir do ID informado."
+			)
 	public ResponseEntity<UsuarioResponseRemovidoDTO>removerUsuario(@PathVariable Long id){
 		Usuario usuario = usuarioServiceInterface.removerUsuario(id);
 		
