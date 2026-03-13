@@ -12,14 +12,16 @@
   box-shadow: 2px 4px 10px 4px #aba7a7;
   background-color: #fff;
 }
-.card-title{
+
+.card-title {
   border-bottom: 2px solid #aba7a780;
   width: 100%;
 }
 
-h3{
+h3 {
   font-size: 1.2rem;
 }
+
 .form-grid {
   display: grid;
   gap: 20px;
@@ -59,14 +61,42 @@ h3{
   gap: 16px;
 }
 
+.btn {
+  border-radius: 0px;
+}
+
+.btn-cancelar {
+  background-color: #aba7a7 !important;
+
+}
+
+.btn-submit {
+  background-color: #10a71d !important;
+  color: #fff;
+}
+
 @media (max-width: 768px) {
+  .card-content {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .form-grid {
+    width: 100%;
+  }
+
   .row-cep,
   .row-dados-pessoais,
   .row-dados-api {
+    display: grid;
     grid-template-columns: 1fr;
+    width: 100%;
+    box-sizing: border-box;
   }
-}
 
-@media (min-width: 320px) {
+  .footer-actions {
+    display: flex;
+    justify-content: center;
+  }
 
 }

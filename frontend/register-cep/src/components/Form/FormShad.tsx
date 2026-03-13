@@ -254,7 +254,7 @@ export function FormShad() {
           </CardTitle>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="card-content">
           <form
             id="formulario-usuario"
             onSubmit={handleSubmit}
@@ -388,12 +388,12 @@ export function FormShad() {
           </form>
         </CardContent>
 
-        <CardFooter className="footer-actions">
-          <Button type="button" variant="outline" onClick={handleCancelar}>
+        <CardFooter className="footer-actions mt-4">
+          <Button className="btn btn-cancelar" type="button" onClick={handleCancelar}>
             Cancelar
           </Button>
 
-          <Button
+          <Button className="btn btn-submit"
             type="submit"
             form="formulario-usuario"
             disabled={criarUsuario.isPending || editarUsuario.isPending}
