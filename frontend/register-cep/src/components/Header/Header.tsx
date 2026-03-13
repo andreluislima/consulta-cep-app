@@ -10,14 +10,14 @@ export default function Header() {
         <div className="content-title">
           <h1>CEP Register</h1>
         </div>
-        <div className="mt-3 mb-3">
-          <p>Sistema de Consulta e Gerenciamento de Endereços</p>
+        <div className="content-descricao mt-4 mb-3">
+          <p className="text-center">Sistema de Consulta e Gerenciamento de Endereços</p>
         </div>
-        <div className="mt-3">
+        <div className="content-btns mt-3">
           <button className="btn btn-primary">
             <Link to={"/novo-registro"} className="link">Novo Registro</Link>
           </button>
-          <button className="btn btn-secondary mx-4">
+          <button className="btn btn-secondary">
             <Link to={"/"} className="link">Ver Registros</Link>
           </button>
         </div>
