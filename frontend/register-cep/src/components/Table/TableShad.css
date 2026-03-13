@@ -28,7 +28,7 @@
 }
 
 .table-row:hover td {
-  background-color: #dbdde0 !important;
+    background-color: #dbdde0 !important;
 }
 
 .table-button {
@@ -37,7 +37,7 @@
 }
 
 .btn {
-    border: 2px solid #e6e2e2c9;
+    border-radius: 7px !important;
 }
 
 .btn:hover {
@@ -46,6 +46,7 @@
 
 .btn-edit {
     border: 2px solid #f3c704;
+
 }
 
 .btn-delete {

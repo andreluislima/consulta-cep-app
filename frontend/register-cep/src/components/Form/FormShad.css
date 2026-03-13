@@ -62,7 +62,7 @@ h3 {
 }
 
 .btn {
-  border-radius: 0px;
+  border-radius: 7px !important;
 }
 
 .btn-cancelar {
