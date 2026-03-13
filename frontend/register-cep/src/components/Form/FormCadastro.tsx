@@ -145,47 +145,59 @@ export function FormCadastro() {
 
     setErros(novosErros);
 
-    toast("Verifique os campos do formulário.", {
-      position: "bottom-right",
+    toast.info("Verifique os campos do formulário.", {
+      position: "top-right",
     });
 
     return false;
   };
 
-  const handleBuscarCep = async () => {
-    try {
-      const resposta = await buscarCep.mutateAsync(cep);
+ const handleBuscarCep = async () => {
+  try {
+    const resposta = await buscarCep.mutateAsync(cep);
 
-      setLogradouro(resposta.logradouro || "");
-      setBairro(resposta.bairro || "");
-      setCidade(resposta.localidade || "");
-      setEstado(resposta.estado || "");
-
-      setErros((estadoAnterior) => ({
-        ...estadoAnterior,
-        cep: undefined,
-        logradouro: undefined,
-        bairro: undefined,
-        cidade: undefined,
-        estado: undefined,
-      }));
-
-      toast("CEP localizado com sucesso.", {
-        position: "bottom-right",
-      });
-    } catch (error) {
-      console.log(`Erro ao buscar o CEP: ${error}`);
-
+    if (!resposta || !resposta.logradouro || !resposta.bairro || !resposta.localidade || !resposta.estado) {
       setLogradouro("");
       setBairro("");
       setCidade("");
       setEstado("");
 
-      toast("Não foi possível localizar o CEP informado.", {
-        position: "bottom-right",
+      toast.error("CEP não encontrado.", {
+        position: "top-right",
       });
+      return;
     }
-  };
+
+    setLogradouro(resposta.logradouro);
+    setBairro(resposta.bairro);
+    setCidade(resposta.localidade);
+    setEstado(resposta.estado);
+
+    setErros((estadoAnterior) => ({
+      ...estadoAnterior,
+      cep: undefined,
+      logradouro: undefined,
+      bairro: undefined,
+      cidade: undefined,
+      estado: undefined,
+    }));
+
+    toast.success("CEP localizado com sucesso.", {
+      position: "top-right",
+    });
+  } catch (error) {
+    console.error("Erro ao buscar o CEP:", error);
+
+    setLogradouro("");
+    setBairro("");
+    setCidade("");
+    setEstado("");
+
+    toast.error("Não foi possível localizar o CEP informado.", {
+      position: "top-right",
+    });
+  }
+};
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -206,12 +218,18 @@ export function FormCadastro() {
         },
         {
           onSuccess: () => {
-            toast("Usuário atualizado com sucesso!", {
-              position: "bottom-right",
+            toast.success("Usuário atualizado com sucesso!", {
+              position: "top-right",
             });
             limparFormulario();
             navigate("/");
           },
+          onError:(error) => {
+            console.log("Erro ao atualizar o usuário:", error);
+            toast.error("Não foi possível atualizar o usuário.",
+              {position:"top-right"}
+            )
+          }
         },
       );
       return;
@@ -219,12 +237,18 @@ export function FormCadastro() {
 
     criarUsuario.mutate(dadosUsuario, {
       onSuccess: () => {
-        toast("Usuário criado com sucesso!", {
-          position: "bottom-right",
+        toast.success("Usuário criado com sucesso!", {
+          position: "top-right",
         });
         limparFormulario();
         navigate("/");
       },
+      onError:(error) =>{
+        console.log("Erro ao cadastrar usuário: ", error);
+        toast.error("Não foi possível cadastrar o usuário.", {
+          position: "top-right"
+        })
+      }
     });
   };
 
